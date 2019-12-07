@@ -1,17 +1,48 @@
-import Taro from "@tarojs/taro";
+import Taro, { useEffect } from "@tarojs/taro";
 import { View, Text } from "@tarojs/components";
 import { AtCard, AtSwipeAction, AtFab } from "taro-ui";
 import dayjs from "dayjs";
-import { useStore, TimeStore, deleteTime } from "../../store";
+import { useStore, TimeStore, deleteTime, setTimes } from "../../store";
 import "./index.scss";
 
 export default function Page() {
-  const { times } = useStore(TimeStore);
+  const { times, openid } = useStore(TimeStore);
+
+  useEffect(() => {
+    action.getData();
+  }, []);
 
   const action = {
+    getData() {
+      const db = Taro.cloud.database();
+      db.collection("times")
+        .where({
+          _openid: openid
+        })
+        .get({
+          success: res => {
+            setTimes(res.data);
+            console.log("[数据库] [查询记录] 成功: ", res);
+          },
+          fail: err => {
+            console.error("[数据库] [查询记录] 失败：", err);
+          }
+        });
+    },
     onDelete(id) {
       if (id) {
-        deleteTime(id);
+        const db = Taro.cloud.database();
+        db.collection("times")
+          .doc(id)
+          .remove({
+            success: res => {
+              console.log("[数据库] [删除记录] 成功：", res);
+              deleteTime(id);
+            },
+            fail: err => {
+              console.error("[数据库] [删除记录] 失败：", err);
+            }
+          });
       }
     },
     onAdd() {
@@ -47,11 +78,11 @@ export default function Page() {
           countDownDays = dayjs(nextTime).diff(now, "day");
         }
         return (
-          <View key={String(item.id)} className="page-index__card">
+          <View key={String(item._id)} className="page-index__card">
             <AtSwipeAction
               autoClose
               onClick={() => {
-                action.onDelete(item.id);
+                action.onDelete(item._id);
               }}
               options={[
                 {
@@ -66,7 +97,7 @@ export default function Page() {
                 title={item.title}
                 extra={item.time}
                 onClick={() => {
-                  action.onEdit(item.id);
+                  action.onEdit(item._id);
                 }}
               >
                 <View>

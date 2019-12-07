@@ -1,6 +1,7 @@
 import Taro, { useState, useRouter, useEffect } from "@tarojs/taro";
 import { View, Text, Picker } from "@tarojs/components";
 import { AtForm, AtInput, AtTextarea, AtButton } from "taro-ui";
+import dayjs from "dayjs";
 
 import { addTime, editTime, getTimeById } from "../../store/index";
 
@@ -8,17 +9,17 @@ import "./add.scss";
 
 export default function Add() {
   const routerParams = useRouter().params;
-  const id = Number(routerParams.id);
+  const id = routerParams.id;
 
   const [data, setData] = useState({
+    time: dayjs(new Date()).format("YYYY/MM/DD"),
     title: "",
-    time: "",
     remark: ""
   });
 
   useEffect(() => {
     if (id) {
-      let time = getTimeById(Number(id));
+      let time = getTimeById(id);
       setData(time);
     }
   }, []);
@@ -27,6 +28,40 @@ export default function Add() {
     onChange(name, val) {
       val = val.detail ? val.detail.value : val;
       setData({ ...data, [name]: val });
+    },
+    onAdd() {
+      const db = Taro.cloud.database();
+      db.collection("times").add({
+        data: data,
+        success: res => {
+          addTime({ ...data, _id: res._id });
+        },
+        fail: err => {
+          console.error("[数据库] [新增记录] 失败：", err);
+          Taro.showToast({
+            title: "添加记录失败~",
+            icon: "fail"
+          });
+        }
+      });
+    },
+    onEdit() {
+      const db = Taro.cloud.database();
+      db.collection("times")
+        .doc(id)
+        .update({
+          data: { title: data.title, time: data.time, remark: data.remark },
+          success: () => {
+            editTime(id, data);
+          },
+          fail: err => {
+            console.error("[数据库] [更新记录] 失败：", err);
+            Taro.showToast({
+              title: "更新记录失败~",
+              icon: "fail"
+            });
+          }
+        });
     },
     onSubmit() {
       if (!data.title) {
@@ -45,9 +80,9 @@ export default function Add() {
       }
 
       if (id) {
-        editTime(id, data);
+        action.onEdit();
       } else {
-        addTime(data);
+        action.onAdd();
       }
       Taro.navigateBack();
     }

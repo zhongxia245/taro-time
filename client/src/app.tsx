@@ -1,5 +1,6 @@
 import Taro, { Component, Config } from "@tarojs/taro";
 import Index from "./pages/index";
+import { setUser, setOpenid } from "./store";
 
 import "./app.scss";
 
@@ -51,6 +52,59 @@ class App extends Component {
       ]
     }
   };
+
+  componentWillMount() {
+    // 调用云函数前需要先初始化
+    if (!Taro.cloud) {
+      console.error("请使用 2.2.3 或以上的基础库以使用云能力");
+    } else {
+      Taro.cloud.init({
+        // env 参数说明：
+        //   env 参数决定接下来小程序发起的云开发调用（wx.cloud.xxx）会默认请求到哪个云环境的资源
+        //   此处请填入环境 ID, 环境 ID 可打开云控制台查看
+        //   如不填则使用默认环境（第一个创建的环境）
+        // env: 'my-env-id',
+        traceUser: true
+      });
+
+      Taro.cloud.callFunction({
+        name: "login",
+        data: {},
+        success: res => {
+          console.log("[云函数] [login] user openid: ", res.result.openid);
+          console.log(res.result);
+          setOpenid(res.result.openid);
+        },
+        fail: err => {
+          console.error("[云函数] [login] 调用失败", err);
+        }
+      });
+    }
+
+    Taro.getSetting({
+      success(res) {
+        console.log("setting", res);
+        // Taro.authorize 提前获取授权，不能获取用户信息的授权，用户信息需要用 Button按钮获取
+        // authorize:fail 系统错误，错误码：-12007,scope unauthorized
+        // https://developers.weixin.qq.com/community/develop/doc/0006026b3c83c0e244573a0025bc08
+        if (res.authSetting["scope.userInfo"]) {
+          Taro.getUserInfo({
+            success: function(res: any) {
+              console.log(res);
+              if (res.errMsg === "getUserInfo:ok") {
+                setUser(res.userInfo);
+              } else {
+                Taro.showToast({
+                  title: "获取用户名称头像失败",
+                  icon: "fail"
+                });
+              }
+            }
+          });
+        }
+      }
+    });
+  }
 
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数

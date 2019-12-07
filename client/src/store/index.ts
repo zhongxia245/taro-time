@@ -25,20 +25,34 @@ export function useStore(store) {
 }
 
 export const TimeStore = new Store({
+  user: {},
+  openid: "",
   // 纪念日
-  times: [
-    {
-      id: 1,
-      title: "来北京",
-      time: "2015/09/28",
-      remark: "那年一个人来了北京，挺好的"
-    },
-    { id: 2, title: "加入公司", time: "2016/10/31", remark: "" },
-    { id: 3, title: "在一起", time: "2018/02/03", remark: "" }
-  ],
+  times: [],
   // 收藏的农历
   lunarDate: []
 });
+
+/**
+ * 设置用户信息
+ */
+export const setUser = item => {
+  TimeStore.set(() => ({ user: item }));
+};
+
+/**
+ * 设置用户信息
+ */
+export const setOpenid = id => {
+  TimeStore.set(() => ({ openid: id }));
+};
+
+/**
+ * 设置纪念日列表
+ */
+export const setTimes = times => {
+  TimeStore.set(() => ({ times: times }));
+};
 
 /**
  * 添加纪念日
@@ -48,13 +62,7 @@ export const TimeStore = new Store({
  */
 export const addTime = item => {
   TimeStore.set(({ times }) => ({
-    times: [
-      ...times,
-      {
-        ...item,
-        id: times.reduce((maxId, todo) => Math.max(todo.id, maxId), -1) + 1
-      }
-    ]
+    times: [...times, item]
   }));
 };
 
@@ -63,7 +71,7 @@ export const addTime = item => {
  **/
 export const deleteTime = id => {
   TimeStore.set(({ times }) => ({
-    times: times.filter(item => item.id !== id)
+    times: times.filter(item => item._id !== id)
   }));
 };
 
@@ -72,7 +80,7 @@ export const deleteTime = id => {
  */
 export const editTime = (id, item) => {
   TimeStore.set(({ times }) => ({
-    times: times.map(time => (time.id === id ? { ...time, ...item } : time))
+    times: times.map(time => (time._id === id ? { ...time, ...item } : time))
   }));
 };
 
@@ -82,5 +90,5 @@ export const editTime = (id, item) => {
  */
 export const getTimeById = id => {
   let times = TimeStore.get().times;
-  return times.filter(item => item.id === id)[0];
+  return times.filter(item => item._id === id)[0];
 };
