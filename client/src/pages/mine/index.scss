@@ -1,0 +1,19 @@
+.page-mine {
+  position: relative;
+  min-height: 100%;
+  background: #F0F0F0;
+}
+
+.page-mine__header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 80px 40px;
+  background: #FFF;
+}
+
+.mine-header__name {
+  font-size: 40px;
+}

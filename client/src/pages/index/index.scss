@@ -1,0 +1,28 @@
+@import "~taro-ui/dist/style/components/icon.scss";
+
+.page-index {
+  position: relative;
+  padding: 30px 0;
+}
+
+.page-index__card {
+  margin-bottom: 20px;
+
+  .card__days {
+    font-size: 34px;
+    font-weight: bold;
+    margin: 0 5px;
+    color: #1296db;
+  }
+
+  .card__remark {
+    margin-top: 10px;
+  }
+}
+
+.page-index__fixedbtn {
+  position: fixed;
+  top: 70%;
+  right: 16px;
+  z-index: 9;
+}

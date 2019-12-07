@@ -1,0 +1,50 @@
+@import '../../sass/mixin/hairline.scss';
+
+$fontSize:32px;
+
+.page-add {
+  padding: 32px;
+
+  .at-input,
+  .at-switch {
+    margin-left: 0;
+    font-size: $fontSize;
+  }
+
+  .at-switch__title {
+    font-size: $fontSize;
+  }
+
+  .form-item {
+    display: flex;
+    font-size: $fontSize;
+    color: #333;
+    padding: 32px 0;
+    @include hairline-bottom;
+
+    .form-item__label {
+      width: 170px;
+      margin-right: 16px;
+    }
+
+    at-textarea {
+      width: 100%;
+
+      &::placeholder {
+        font-size: $fontSize;
+      }
+    }
+  }
+
+  .form-item__control {
+    flex: 1;
+
+    .form-item__placeholder {
+      color: #cdcdcd;
+    }
+  }
+
+  .at-button {
+    margin-top: 100px;
+  }
+}

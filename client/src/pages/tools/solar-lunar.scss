@@ -1,0 +1,67 @@
+@import '../../sass/mixin/hairline.scss';
+$fontSize:32px;
+$padding:32px;
+
+.page-solar-lunar {
+  background: #ffffff;
+  line-height: 1.5;
+
+  .form-item {
+    display: flex;
+    padding: $padding;
+    color: #333;
+    font-size: $fontSize;
+
+    @include hairline-bottom;
+
+    .form-item__label {
+      margin-right: 16px;
+      width: 170px;
+    }
+
+    at-textarea {
+      width: 100%;
+
+      &::placeholder {
+        font-size: $fontSize;
+      }
+    }
+  }
+
+  .form-item__control {
+    flex: 1;
+
+    .form-item__placeholder {
+      color: #cdcdcd;
+    }
+  }
+
+  .result {
+    margin-top: 30px;
+
+    .result__item {
+      margin-top: 16px;
+      padding: 10px 0;
+    }
+
+    .span {
+      margin: 0 8px;
+      padding: 10px;
+      border-radius: 10px;
+      background: #1296db;
+      color: #FFF;
+      font-size: 24px;
+    }
+
+    .span--big {
+      margin: 0 8px;
+      color: #1296db;
+      font-size: 36px;
+    }
+  }
+
+  .btns {
+    padding: $padding;
+  }
+
+}

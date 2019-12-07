@@ -1,0 +1,27 @@
+.m-box {
+  padding-top: 50px;
+}
+
+.m-area {
+  left: -100vw;
+  z-index: 99;
+  width: 200vw;
+  height: 696px;
+  background: rgba(0, 0, 0, 0);
+}
+
+.m-item-box {
+  position: relative;
+  z-index: 9;
+  margin-left: 42px;
+  padding-top: 76px;
+  width: 666px;
+  height: 692px;
+  border: 1px solid #ebebeb;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.box-active {
+  box-shadow: 0 0 10px #000;
+}
