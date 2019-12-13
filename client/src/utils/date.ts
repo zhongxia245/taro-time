@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 // https://www.npmjs.com/package/solarlunar
 import solarLunar from "solarlunar";
-
+global.solarLunar = solarLunar;
+global.dayjs = dayjs;
 /**
  * 计算两个时间差
  * 并返回目标时间的农历信息
@@ -29,6 +30,14 @@ export function getDiffInfo(startTime, targetTime) {
     diffYears,
     countDownDays
   };
+}
+
+/**
+ * 获取今年农历几月几号的日子
+ */
+export function getCurrentYearLunar(month: number, day: number) {
+  let lunarInfo = solarLunar.lunar2solar(new Date().getFullYear(), month, day);
+  return lunarInfo;
 }
 
 /**

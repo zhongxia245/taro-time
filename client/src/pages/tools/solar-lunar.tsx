@@ -1,7 +1,11 @@
 import Taro, { useState } from "@tarojs/taro";
 import { View, Picker, Text } from "@tarojs/components";
 import { AtCard, AtForm, AtButton } from "taro-ui";
-import { getDiffInfo, getLunar2Solar } from "../../utils/date";
+import {
+  getDiffInfo,
+  getLunar2Solar,
+  getCurrentYearLunar
+} from "../../utils/date";
 
 import "./solar-lunar.scss";
 
@@ -16,13 +20,26 @@ export default function SolarLunar() {
     }
   };
 
+
+  // TODO:后期优化计算的方式
+
   let date = new Date(data.time);
-  let timeInfo = getLunar2Solar(date);
+  let timeInfo = getLunar2Solar(date); // 计算当前的选中日期的农历
+
+  // 计算今年的农历对应的公历
+  let currentLunarTime = getCurrentYearLunar(
+    date.getMonth() + 1,
+    date.getDate()
+  );
+  let currentSolarTime = new Date(
+    currentLunarTime.cYear,
+    currentLunarTime.cMonth - 1,
+    currentLunarTime.cDay
+  );
 
   let solarDate = new Date(timeInfo.cYear, timeInfo.cMonth - 1, timeInfo.cDay);
   let diffInfo = getDiffInfo(new Date(), solarDate);
-
-  console.log(diffInfo, timeInfo);
+  let nextTime = getDiffInfo(new Date(), currentSolarTime);
 
   return (
     <View className="page-solar-lunar">
@@ -69,7 +86,15 @@ export default function SolarLunar() {
         </View>
         <View className="result__item">
           下一个日子还有
-          <Text className="span--big">{diffInfo.countDownDays}</Text>天
+          <Text className="span--big">{nextTime.countDownDays}</Text>天
+        </View>
+        <View className="result__item">
+          下一个日期
+          <Text className="span">
+            {currentLunarTime.cYear}年{currentLunarTime.cMonth}月
+            {currentLunarTime.cDay}日
+          </Text>
+          <Text className="span">{currentLunarTime.ncWeek}</Text>
         </View>
       </AtCard>
       <View className="btns">

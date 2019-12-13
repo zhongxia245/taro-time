@@ -14,20 +14,6 @@ export default function Mine() {
         title: "该功能暂未开发",
         icon: "none"
       });
-    },
-    getOpenId() {
-      Taro.cloud.callFunction({
-        name: "login",
-        data: {},
-        success: res => {
-          console.log("[云函数] [login] user openid: ", res.result.openid);
-          console.log(res.result);
-          setOpenid(res.result.openid);
-        },
-        fail: err => {
-          console.error("[云函数] [login] 调用失败", err);
-        }
-      });
     }
   };
 
@@ -53,7 +39,6 @@ export default function Mine() {
         </View>
       )}
       <AtList>
-        <AtListItem title="登录用户" arrow="right" onClick={action.getOpenId} />
         <AtListItem title="同步到云端" arrow="right" onClick={action.showTip} />
         <AtListItem
           title="公历转农历"

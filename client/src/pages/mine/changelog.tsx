@@ -9,6 +9,10 @@ export default function ChangeLog() {
       <AtTimeline
         items={[
           {
+            title: "2019-12-07 12:46:03",
+            content: ["1. 增加小程序云函数的支持"]
+          },
+          {
             title: "2019-12-02 23:00:33",
             content: ["1. 增加农历转公历的工具"]
           },
